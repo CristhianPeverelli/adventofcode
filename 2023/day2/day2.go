@@ -11,7 +11,7 @@ import (
 
 func main() {
 	startTime := time.Now()
-	filePath := "C:\\Users\\cpeverelli\\Desktop\\adventofcode\\2023\\day2\\input.txt"
+	filePath := "C:\\Users\\Peve\\Desktop\\adventofcode\\2023\\day2\\input.txt"
 
 	// PART 1
 	file, err := os.Open(filePath)
@@ -47,5 +47,26 @@ func main() {
 	fmt.Println("PART 1:", sum)
 
 	// PART 2
+	file, _ = os.Open(filePath)
+	defer file.Close()
+	scanner = bufio.NewScanner(file)
+	sum = 0
+	for scanner.Scan() {
+		line := scanner.Text()
+		counters := make(map[string]int)
+		sets := strings.Split(strings.Split(line, ":")[1], ";")
+		for _, set := range sets {
+			parts := strings.Split(set, ",")
+			for _, part := range parts {
+				vals := strings.Split(part, " ")
+				num, _ := strconv.Atoi(vals[1])
+				if num > counters[string(vals[2])] {
+					counters[string(vals[2])] = num
+				}
+			}
+		}
+		sum += counters["green"] * counters["red"] * counters["blue"]
+	}
+	fmt.Println("PART 2:", sum)
 	fmt.Printf("Execution time: %s\n", time.Since(startTime))
 }
