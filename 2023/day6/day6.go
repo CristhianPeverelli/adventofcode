@@ -45,14 +45,12 @@ func main() {
 		distance, _ := strconv.Atoi(distances[i])
 		res := calcWays(time, distance)
 		sum *= res
-		fmt.Println(res)
 	}
 
-	fmt.Println("PART 1: ", sum)
-
+	fmt.Println("PART 1: check previous commit")
 	// PART 2
 	fmt.Println("PART 2: ", sum)
-	fmt.Printf("Execution time: %s\n", time.Now().Sub(startTime))
+	fmt.Printf("Execution time: %s\n", time.Since(startTime))
 }
 
 func calcWays(time int, distance int) (count int) {
