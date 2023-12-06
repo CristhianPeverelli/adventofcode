@@ -11,7 +11,7 @@ import (
 
 func main() {
 	startTime := time.Now()
-	filePath := "C:\\Users\\cpeverelli\\Desktop\\adventofcode\\2023\\day6\\input.txt"
+	filePath := "C:\\Users\\Peve\\Desktop\\adventofcode\\2023\\day6\\input.txt"
 
 	// PART 1
 	file, err := os.Open(filePath)
