@@ -10,22 +10,6 @@ import (
 	"time"
 )
 
-var cardStrength = map[byte]int{
-	'A': 14,
-	'K': 13,
-	'Q': 12,
-	'J': 11,
-	'T': 10,
-	'9': 9,
-	'8': 8,
-	'7': 7,
-	'6': 6,
-	'5': 5,
-	'4': 4,
-	'3': 3,
-	'2': 2,
-}
-
 func main() {
 	startTime := time.Now()
 	filePath := "C:\\Users\\cpeverelli\\Desktop\\adventofcode\\2023\\day7\\input.txt"
@@ -41,26 +25,29 @@ func main() {
 	rankedHands := []string{}
 	for scanner.Scan() {
 		str := scanner.Text()
-		rankedHands = insertSort(rankedHands, fmt.Sprint(getRank(str[:6]))+" - "+(str[:6])+"- "+str[6:])
+		rankedHands = insertSort(rankedHands, fmt.Sprint(getRank(replaceJokers((str[:6]))))+" - "+(str[:6])+"- "+str[6:])
 	}
 	currentRank := 1
 	lastRanked := 0
 	for i, str := range rankedHands {
 		c, _ := strconv.Atoi(string(str[0]))
 		if c > currentRank {
+			fmt.Println("Ordino:", rankedHands[lastRanked:i])
 			orderCards(rankedHands[lastRanked:i])
-			currentRank++
+			currentRank += c - currentRank
 			lastRanked = i
 		}
 	}
+	fmt.Println("Ordino:", rankedHands[lastRanked:])
 	orderCards(rankedHands[lastRanked:])
+	fmt.Println(rankedHands)
 	for i, str := range rankedHands {
 		values := strings.Split(str, "-")
 		num, _ := strconv.Atoi(strings.TrimSpace(values[2]))
+		fmt.Println(num, "*", i+1)
 		sum += num * (i + 1)
 	}
-	fmt.Println("PART 1: ", sum)
-	// PART 2
+	fmt.Println("PART 1: check previous commit")
 	fmt.Println("PART 2: ", sum)
 	fmt.Printf("Execution time: %s\n", time.Since(startTime))
 
@@ -111,7 +98,6 @@ func getIndex(char byte, order string) int {
 	}
 	return -1
 }
-
 func getRank(hand string) int {
 	cardCounts := make(map[rune]int)
 	for _, card := range hand {
@@ -142,4 +128,28 @@ func getRank(hand string) int {
 	} else {
 		return 1 // High card
 	}
+}
+
+func replaceJokers(hand string) string {
+	jokerCount := strings.Count(hand, "J")
+	return replaceJokersRecursive(hand, jokerCount)
+}
+
+func replaceJokersRecursive(hand string, jokerCount int) string {
+	if jokerCount == 0 {
+		return hand
+	}
+	ranks := "23456789TJQKA"
+	maxHand := hand
+	maxRank := getRank(hand)
+	for _, r := range ranks {
+		newHand := strings.Replace(hand, "J", string(r), 1)
+		newRank := getRank(newHand)
+
+		if newRank > maxRank {
+			maxRank = newRank
+			maxHand = newHand
+		}
+	}
+	return replaceJokersRecursive(maxHand, jokerCount-1)
 }
