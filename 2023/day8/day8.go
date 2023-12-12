@@ -32,23 +32,43 @@ func main() {
 		vals := strings.Split(str, "=")
 		nodes[strings.TrimSpace(vals[0])] = strings.TrimSpace(vals[1][2 : len(vals[1])-1])
 	}
-	selectedNode := "AAA"
+
+	// PART 2
+	aNodes := []string{}
+	for key := range nodes {
+		if key[2] == 'A' {
+			aNodes = append(aNodes, key)
+		}
+	}
+	fmt.Println(aNodes)
 	index := 0
-	count := 0
-	for selectedNode != "ZZZ" {
+	count2 := 0
+	for !completed(aNodes) {
 		if index >= len(steps) {
 			index = 0
 		}
-		str := nodes[selectedNode]
-		vals := strings.Split(str, ",")
-		if steps[index] == 'L' {
-			selectedNode = strings.TrimSpace(vals[0])
-		} else {
-			selectedNode = strings.TrimSpace(vals[1])
+		for i, node := range aNodes {
+			str := nodes[strings.TrimSpace(node)]
+			vals := strings.Split(str, ",")
+			if steps[index] == 'L' {
+				aNodes[i] = vals[0]
+			} else {
+				aNodes[i] = vals[1]
+			}
 		}
-		count++
+		count2++
 		index++
 	}
-	fmt.Println("PART 1: ", count)
+	fmt.Println("PART 1: check previous commit")
+	fmt.Println("PART 2: ", count2)
 	fmt.Printf("Execution time: %s\n", time.Since(startTime))
+}
+
+func completed(a []string) bool {
+	for _, str := range a {
+		if str[2] != 'Z' {
+			return false
+		}
+	}
+	return true
 }
