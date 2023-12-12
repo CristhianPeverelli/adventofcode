@@ -20,7 +20,7 @@ func main() {
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
-	sum := 0
+	sum, sum2 := 0, 0
 	for scanner.Scan() {
 		str := scanner.Text()
 		vals := strings.Split(str, " ")
@@ -31,10 +31,18 @@ func main() {
 
 		}
 		sum += getValue(values)
+		sum2 += getValue2(values)
 	}
 	fmt.Println("PART 1: ", sum)
-	// fmt.Println("PART 2: ", sum)
+	fmt.Println("PART 2: ", sum2)
 	fmt.Printf("Execution time: %s\n", time.Since(startTime))
+}
+
+func getValue2(values []int) int {
+	if len(values) == 0 {
+		return 0
+	}
+	return values[0] - getValue2(convertedValues(values))
 }
 
 func getValue(values []int) int {
